@@ -1,46 +1,53 @@
 #ifndef condition_h
 #define condition_h
-
 #include <map>
+#include "algebraic_structure.h"
+
+
+enum Quantifiers {FOR_ALL_X_FOR_ALL_Y,
+    FOR_ALL_X_EXISTS_Y,
+    FOR_ALL_X_EXISTS_UNIQUE_Y,
+    EXISTS_X_FOR_ALL_Y,
+    EXISTS_X_EXISTS_Y,
+    EXISTS_X_EXISTS_UNIQUE_Y,
+    EXISTS_UNIQUE_X_FOR_ALL_Y,
+    EXISTS_UNIQUE_X_EXISTS_Y,
+    EXISTS_UNIQUE_X_EXISTS_UNIQUE_Y
+};
+
 
 class Condition {
- private:
-
- public: 
-    enum Quantifiers {FOR_ALL_X_FOR_ALL_Y,
-                        FOR_ALL_X_EXISTS_Y,
-                        FOR_ALL_X_EXISTS_UNIQUE_Y,
-                        EXISTS_X_FOR_ALL_Y,
-                        EXISTS_X_EXISTS_Y,
-                        EXISTS_X_EXISTS_UNIQUE_Y,
-                        EXISTS_UNIQUE_X_FOR_ALL_Y,
-                        EXISTS_UNIQUE_X_EXISTS_Y,
-                        EXISTS_UNIQUE_X_EXISTS_UNIQUE_Y
-    };
+private:
+    
+    //predicate P(x,y,z) is represented as a function f(x,y) -> z
+    std::function<int (char,char)> f;
+    
+    //string representing this predicate, needed both for human readable output
+    //and interaction with the theorem prover
+    
+    //TODO: can't we construct the string from the relation name alone?
+    std::string s;
+    
+public:
+    //map from quantifiers to boolean values for this predicate
+    //this is filled in by the search code in algebraic_structure.cpp
     std::map<Quantifiers, bool> values;
-
-  //+ lambda abstraction for C;
-  //what does it look like? 
-  //loop provides specific values of x,y
-  //lambda returns one of  op(x,y) = x, op(y,x), op(x,x),  op(y,y) , etc.
-  //mult. talble lookup operations
-
+    
+    //predicate arity
+    int arity;
+    
     //default constructor
     Condition(){};
     
-    //constructor.... change to lambda? something?
+    //constructor TODO
     Condition(int x){};
-    //constructor: condition(lamdba for c){
-  //lamdba = lambda
-  // cases_checked = false
-  // bools?
-
+    //f = function
+    //s = string
+    //anything else?
     
     
-    bool check_condition(Quantifiers);
-    
-    
-    
+    //table lookup function
+    bool check_condition(Algebraic_structure&, char, char);
     
 };
 
