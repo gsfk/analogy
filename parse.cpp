@@ -1,3 +1,4 @@
+#include "parse.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -104,12 +105,12 @@ Algebraic_structure *parse(char* filename) {
                     
                     //push this fact into table
                     facts.push_back(this_fact);
-                    
+                    this_fact.clear();
                 }
                 
                 //get next line
                 getline(input_file, input_string);
-
+                
             }
             
         } //end fact handling
@@ -124,14 +125,14 @@ Algebraic_structure *parse(char* filename) {
             
             Algebraic_structure *alg = new Algebraic_structure(elements, relation_name, facts);
             return alg;
-
+            
             //finshing reading file
         }
-    } //end main while loop 
-
+    } //end main while loop
+    
     //we should only get here if file is malformed.
     //TODO: exception?
-
+    
     return nullptr;
     
 }

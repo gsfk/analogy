@@ -3,19 +3,83 @@
 #include "condition.h"
 #include "algebraic_structure.h"
 
+//debug helper fns
+void print_elements(std::vector<char> v){
+    std::cout << "element vector is: ";
+    
+    for (int i= 0; i < v.size(); i++){
+        std::cout <<"["<< v[i] << "]";
+    }
+    std::cout << std::endl;
+}
+
+void print_facts (std::vector < std::vector<char> > v){
+    std::vector<char> current;
+    std::cout << "facts vector is: ";
+    for (int i = 0; i < v.size(); i++) {
+        std::cout << "{";
+        current = v[i];
+        std::cout << "(" << current[0] << ", " << current[1] << ", " << current[2] << ")";
+    }
+    std::cout << "}"<< std::endl;
+}
+
 
 void Algebraic_structure::two_ways_of_analogy_search(Condition* c){
+    
+    std::cout << "\nSTART BRUTE FORCE SEARCH for predicate: " << c->name << std::endl;
+    
     
     //check all cases
     //void functions update boolean values associated with this particular predicate
     
+    //if this one is true, the rest are either redundant or false
     forall_x_forall_y(c);
-    forall_x_exists_y(c);
-    exists_x_forall_y(c);
-    exists_x_exists_y(c);
+    
+    //for any of these that are true, the corresponding arrangment without "unique"
+    //is also true
     exists_unique_x_exists_y(c);
     exists_x_exists_unique_y(c);
     exists_unique_x_exists_unique_y(c);
+    
+    forall_x_exists_y(c);
+    exists_x_forall_y(c);
+    exists_x_exists_y(c);
+}
+
+
+//binary operator table lookup
+
+//Complexity here is O(n^2)... this would be much faster if we generated a C-style 2D array
+//and performed lookups in O(1) time. For arbitrary arity unknown at runtime, it's easier to
+//simply iterate through facts, so we'll start with the most general code possible, then
+//speed it up when it seems terrible
+
+//TODO: generalize to arbitrary arity
+char Algebraic_structure::table_lookup(char a, char b){
+    std::vector<char> current_fact;
+    
+    //iterate through fact table
+    for(int i = 0; i < facts.size(); i++){
+        
+        //get fact, which is a vector of size arity
+        current_fact = facts[i];
+        
+        //  std::cout << "table lookup: " << current_fact[0] << ", " << current_fact[1] << ", " << current_fact[2] << std::endl;
+        
+        //pattern match on a fact (a,b,x), return x
+        if (current_fact[0] == a && current_fact[1] == b){
+            return current_fact[2];
+        }
+    }
+    
+    //if you made it here, fact not found
+    //input domain is required to be complete and fully definied,
+    //so as long as we ask about elements of the domain, we should always find facts
+    
+    //TODO: exception?
+    std::cerr << "fact not found, x = " << a <<", y = " << b << std::endl;
+    return 0;
 }
 
 
@@ -23,7 +87,7 @@ void Algebraic_structure::two_ways_of_analogy_search(Condition* c){
 
 //CODE FOR EXHAUSTIVE CHECKING OF QUANTIFICATION FOR A GIVEN PREDICATE
 
-/* Checks all cases of the form Q1 x Q2 y: P(v1, v2, v3)
+/* Checks all cases of the form Q1x Q2y: P(v1, v2, v3)
  where: the Qs are any of the universal, existential or "exists exactly one" quantifiers
  v1, v2, v3 are either x or y
  
@@ -39,21 +103,33 @@ void Algebraic_structure::two_ways_of_analogy_search(Condition* c){
  separate checks for "for all x exists y" and "for all x exists a unique y", we can so some small case
  analysis inside the loop and cut down on the number of nested loops we need to run.
  
- 
- 
- 
- 
  */
+
+
 
 void Algebraic_structure::forall_x_forall_y(Condition* c){
     char x,y;
+    
+    std::cout << " ∀x∀y: " << c->name << std::endl;
+    std::cout << "domain has " << this->order<< " elements" << std::endl;
+    std::cout << " and " << this->facts.size() << " facts" << std::endl;
+    
+    std::cout << "elements: " << std::endl;
+    print_elements(this->elements);
+    
+    std::cout << "facts:" <<std::endl;
+    print_facts(this->facts);
+    
     for (int i = 0; i < this->order; i++){
         x = this->elements[i];
-        for (int j = 0; i < this->order; i++){
+        for (int j = 0; j < this->order; j++){
             y = this->elements[j];
             
+            std::cout<< "checking x = " << x << ", y = " << y << std::endl;
+            
             //check condition, quit if false
-            if (!c->check_condition(x, y)){
+            if (!c->check_condition(*this, x, y)){
+                std::cout << "found false for x = " << x << ", y = " << y << std::endl;
                 c->values[FOR_ALL_X_FOR_ALL_Y] = false;
                 return;
             }
@@ -61,6 +137,7 @@ void Algebraic_structure::forall_x_forall_y(Condition* c){
     }
     //made it all the way without quitting, all conditions true
     c->values[FOR_ALL_X_FOR_ALL_Y] = true;
+    std::cout << "for all for all true for " << c->name << std::endl;
 }
 
 
@@ -89,9 +166,9 @@ void Algebraic_structure::forall_x_exists_y(Condition* c){
         unique_counter = 0;
         
         //inner loop y
-        for (int j = 0; i < this->order; i++){
+        for (int j = 0; j < this->order; j++){
             y = this->elements[j];
-            if (c->check_condition(x, y)){
+            if (c->check_condition(*this, x, y)){
                 exists = true;
                 unique_counter ++;
             }
@@ -112,6 +189,9 @@ void Algebraic_structure::forall_x_exists_y(Condition* c){
     
     //if we made it here, "for all x, exists y" is met for this condition
     c->values[FOR_ALL_X_EXISTS_Y] = true;
+    
+    //remove
+    // std::cout<< "for all exists found true for " << c->name << std::endl;
     
     //and possibly also "for all x, exists unique y"
     if (exists_unique) {
@@ -136,7 +216,7 @@ void Algebraic_structure::exists_x_forall_y(Condition* c){
             y = this->elements[j];
             
             // if y ever fails, skip to next x value
-            if (!c->check_condition(x,y)){
+            if (!c->check_condition(*this, x, y)){
                 current_x = false;
                 break;
             }
@@ -170,11 +250,11 @@ void Algebraic_structure::exists_x_exists_y(Condition* c){
     for (int i = 0; i < this->order; i++){
         x = this->elements[i];
         
-        for (int j = 0; i < this->order; i++){
+        for (int j = 0; j < this->order; j++){
             y = this->elements[j];
-        
+            
             //if condition ever holds, we're done
-            if (c->check_condition(x,y)){
+            if (c->check_condition(*this, x, y)){
                 c->values[EXISTS_X_EXISTS_Y] = true;
                 return;
             }
@@ -196,15 +276,14 @@ void Algebraic_structure::exists_unique_x_exists_y(Condition* c){
         x = this->elements[i];
         y_found = false;
         
-        for (int j = 0; i < this->order; i++){
+        for (int j = 0; j < this->order; j++){
             y = this->elements[j];
             
-            if (c->check_condition(x,y)){
+            if (c->check_condition(*this, x, y)){
                 y_found = true;
             } //end condition check
-        
+            
         } //end y loop
-        
         
         if (y_found){
             //if an x already found, no unique x, set to false and exit
@@ -235,7 +314,7 @@ void Algebraic_structure::exists_unique_x_exists_y(Condition* c){
 
 
 
-//there's some x where the condition is met for a single y 
+//there's some x where the condition is met for a single y
 
 void Algebraic_structure::exists_x_exists_unique_y(Condition* c){
     char x,y;
@@ -244,10 +323,10 @@ void Algebraic_structure::exists_x_exists_unique_y(Condition* c){
         x = this->elements[i];
         y_count = 0;
         
-        for (int j = 0; i < this->order; i++){
+        for (int j = 0; j < this->order; j++){
             y = this->elements[j];
             
-            if (c->check_condition(x,y)){
+            if (c->check_condition(*this, x, y)){
                 y_count++;
             }
             
@@ -262,7 +341,7 @@ void Algebraic_structure::exists_x_exists_unique_y(Condition* c){
     
     //made it to the end without finding a unique y for any x
     c->values[EXISTS_X_EXISTS_UNIQUE_Y] = false;
-
+    
 }
 
 
@@ -277,10 +356,10 @@ void Algebraic_structure::exists_unique_x_exists_unique_y(Condition* c){
     for (int i = 0; i < this->order; i++){
         x = this->elements[i];
         
-        for (int j = 0; i < this->order; i++){
+        for (int j = 0; j < this->order; j++){
             y = this->elements[j];
             
-            if (c->check_condition(x,y)){
+            if (c->check_condition(*this, x, y)){
                 //if already found an xy, there's no unique xy, set false and exit
                 if (found_unique_xy){
                     c->values[EXISTS_UNIQUE_X_EXISTS_UNIQUE_Y] = false;
@@ -296,8 +375,11 @@ void Algebraic_structure::exists_unique_x_exists_unique_y(Condition* c){
     //made it to the end, xy found either one or zero times
     if (found_unique_xy) {
         c->values[EXISTS_UNIQUE_X_EXISTS_UNIQUE_Y] = true;
+        //std::cout << "unique_unique found true for " << c->name <<std::endl;
     } else {
         c->values[EXISTS_UNIQUE_X_EXISTS_UNIQUE_Y] = false;
+        //std::cout << "unique_unique found false for " << c->name <<std::endl;
+        
     }
 }
 
