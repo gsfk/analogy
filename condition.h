@@ -1,8 +1,9 @@
 #ifndef condition_h
 #define condition_h
 #include <map>
+#include <vector>
 #include "algebraic_structure.h"
-
+#include "prover.h"
 
 enum Quantifiers {FOR_ALL_X_FOR_ALL_Y,
     FOR_ALL_X_EXISTS_Y,
@@ -27,38 +28,78 @@ private:
     //the predicate will only have two bound variables (claims such as "x * y = x").
     std::function<int (Algebraic_structure, char, char)> f;
     
-    //string representing this predicate, needed both for human readable output
-    //and interaction with the theorem prover
-    //TODO: can't we construct the string from the relation name alone?
-    std::string s;
+
     
 public:
     //map from quantifiers to boolean values for this predicate
     //this is filled in by the search code in algebraic_structure.cpp
     std::map<Quantifiers, bool> values;
     
+    //human readable predicate name ("x * y = y" more meaningful than "*(x,y,y)")
+    //could probably build this as needed instead
+    std::string name;
+    
+    //predicate variables in order
+    //this way we can construct predicate names for arbitary arity,
+    //and access terms in the prover call, where we have to construct replacements
+    //for the uniqueness quantifier
+    std::vector<char> ordered_variables;
+    
+    //relation name (shared with algebraic structure class)
+    std::string relation;
+    
     //predicate arity
-    int arity;
+    //int arity;
     
     //default constructor
     Condition(){};
     
-    //constructor TODO
-    Condition(int x){};
-    //f = function
-    //s = string
-    //anything else?
-    
-    
-    //table lookup function
-    //bool check_condition(Algebraic_structure&, char, char);
-    
-    
-    bool check_condition(Algebraic_structure& g, char x, char y){
-        return this->f(g,x,y);
+    //copy constructor
+    Condition(const Condition& c) {
+        f = c.f;
+        name = c.name;
     }
     
+    //constructor 
+    Condition(std::function<int (Algebraic_structure, char, char)> func, std::string readable_predicate_name,
+              std::vector<char> v, std::string r){
+        f = func;
+        name = readable_predicate_name;
+        //prover_name = predicate_name;
+        ordered_variables = v;
+        relation = r;
+    };
+   
+
+    
+    //table lookup function
+    bool check_condition(Algebraic_structure&, char, char);
+    
+    //print all bool values to console
+    void print_map();
+
+    //construct predicate name for prover output
+    std::string prover_name();
+    
+    //generate outcomes in prover syntax
+    std::string prover_print();
+    
+
+
 };
+
+
+//-- Static functions --//
+
+//get all arity 3 predicates
+std::vector<Condition*> return_all_predicates(std::string);
+
+//generate all true formulas for prover output
+std::vector<Formula>& generate_formulas(std::vector<Condition*> predicates);
+
+//get readable names for quantifiers
+std::pair<std::string, std::string> quantifier_names(Quantifiers);
+
 
 
 
@@ -70,7 +111,7 @@ public:
  auto p2 = [](Algebraic_structure a, char x, char y){ return a.table_lookup(x,y) == x; };     // x * y = x
  auto p3 = [](AlAlgebraic_structureg a, char x, char y){ return a.table_lookup(y,x) == x; };     // y * x = x
  
- ... this uses C++ lambda abstractions, which is not strictly necessary, but is nice and concise
+ ... this uses C++ lambda abstractions, which is not strictly necessary, but they're nice and concise
  
  While the predicate explicitly mentions the domain ("Algebraic_structure a" in the input) the predicate is not
  fixed to any particular domain, since this is given as input.
@@ -80,8 +121,6 @@ public:
  it takes the domain g, and two values x and y as input, and passes back the true/false results
  
  */
-
-
 
 
 
