@@ -48,12 +48,12 @@ void Algebraic_structure::two_ways_of_analogy_search(Condition* c){
 }
 
 
-//binary operator table lookup
+//table lookup
+//currently implemented for binary operators only (given x and y, returns a result z)
 
-//Complexity here is O(n^2)... this would be much faster if we generated a C-style 2D array
-//and performed lookups in O(1) time. For arbitrary arity unknown at runtime, it's easier to
-//simply iterate through facts, so we'll start with the most general code possible, then
-//speed it up when it seems terrible
+//but I've tried to write everything with the goal of arbitrary arity, so this shouldn't be difficult 
+//to generalize. As a bonus the complexity of C++ vector lookup is faster than I thought (O(1)), so lookup is 
+//faster than expected.  
 
 //TODO: generalize to arbitrary arity
 char Algebraic_structure::table_lookup(char a, char b){
@@ -76,7 +76,8 @@ char Algebraic_structure::table_lookup(char a, char b){
     //if you made it here, fact not found
     //input domain is required to be complete and fully definied,
     //so as long as we ask about elements of the domain, we should always find facts
-    
+    //even if the operator does not have the closure property
+
     //TODO: exception?
     std::cerr << "fact not found, x = " << a <<", y = " << b << std::endl;
     return 0;
@@ -241,7 +242,6 @@ void Algebraic_structure::exists_x_forall_y(Condition* c){
 
 
 
-//TODO: expand case analysis to include ∃∃! ∃!∃ and ∃!∃!
 
 //condition is met at least once
 
