@@ -38,13 +38,13 @@ private:
     std::vector < std::vector<char> > facts;
     unsigned long num_facts;
     
+public:
+    std::string relation;
+    
     //relational properties not tied to a particular condition
     //commutativity, associativity, inverses, etc.
     std::map<Properties, bool> extra_properties;
     
-    
-public:
-    std::string relation;
     
     //constructors
     Algebraic_structure(){};

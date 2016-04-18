@@ -5,7 +5,9 @@
 #include "algebraic_structure.h"
 #include "prover.h"
 
-enum Quantifiers {FOR_ALL_X_FOR_ALL_Y,
+
+enum Quantifiers {
+    FOR_ALL_X_FOR_ALL_Y,
     FOR_ALL_X_EXISTS_Y,
     FOR_ALL_X_EXISTS_UNIQUE_Y,
     EXISTS_X_FOR_ALL_Y,
@@ -28,7 +30,6 @@ private:
     //the predicate will only have two bound variables (claims such as "x * y = x").
     std::function<int (Algebraic_structure, char, char)> f;
     
-
     
 public:
     //map from quantifiers to boolean values for this predicate
@@ -49,7 +50,7 @@ public:
     std::string relation;
     
     //predicate arity
-    //int arity;
+    int arity;
     
     //default constructor
     Condition(){};
@@ -76,7 +77,7 @@ public:
     bool check_condition(Algebraic_structure&, char, char);
     
     //print all bool values to console
-    void print_map();
+    void print_map() const;
 
     //construct predicate name for prover output
     std::string prover_name();
@@ -84,7 +85,9 @@ public:
     //generate outcomes in prover syntax
     std::string prover_print();
     
-
+    //helper fns
+//    int num_x(Condition);
+//    int num_y(Condition);
 
 };
 
@@ -95,7 +98,7 @@ public:
 std::vector<Condition*> return_all_predicates(std::string);
 
 //generate all true formulas for prover output
-std::vector<Formula>& generate_formulas(std::vector<Condition*> predicates);
+std::vector<Formula>& generate_formulas(std::vector<Condition*> predicates, Algebraic_structure);
 
 //get readable names for quantifiers
 std::pair<std::string, std::string> quantifier_names(Quantifiers);

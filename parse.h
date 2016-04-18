@@ -5,7 +5,7 @@
 //#include <fstream>
 //#include <string>
 //#include <vector>
-#include "algebraic_structure.h"
+//#include "algebraic_structure.h"
 //#include "condition.h"
 
 Algebraic_structure *parse(char* filename);

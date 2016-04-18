@@ -80,17 +80,6 @@ void Algebraic_structure::two_ways_of_analogy_search(Condition* c){
 }
 
 
-//search for extra properties not expressible with only two quantifiers
-void Algebraic_structure::extra_properties_search(){
-    commutativity();
-    associativity();
-    closure();
-    left_identity_left_inverse();
-    left_identity_right_inverse();
-    right_identity_left_inverse();
-    right_identity_right_inverse();
-}
-
 
 
 
@@ -122,7 +111,7 @@ void Algebraic_structure::forall_x_forall_y(Condition* c){
 void Algebraic_structure::forall_x_exists_y(Condition* c){
     char x,y;
     bool exists, exists_unique;
-    int unique_counter;
+    int unique_counter = 0;
     
     //flag to mark if condition is met only once each time through inner loop
     //set to false the first time false, never re-examine
@@ -166,7 +155,7 @@ void Algebraic_structure::forall_x_exists_y(Condition* c){
     c->values[FOR_ALL_X_EXISTS_Y] = true;
     
     //and possibly also "for all x, exists unique y"
-    if (exists_unique) {
+    if (exists_unique && unique_counter == 1) {
         c->values[FOR_ALL_X_EXISTS_UNIQUE_Y] = true;
     }
 }
@@ -346,7 +335,18 @@ void Algebraic_structure::exists_unique_x_exists_unique_y(Condition* c){
 
 
 
-//interesting triple quantifier cases:
+
+
+//search for select extra properties not expressible with only two quantifiers
+void Algebraic_structure::extra_properties_search(){
+    commutativity();
+    associativity();
+    closure();
+    left_identity_left_inverse();
+    left_identity_right_inverse();
+    right_identity_left_inverse();
+    right_identity_right_inverse();
+}
 
 void Algebraic_structure::commutativity(){
     char x,y;
@@ -385,6 +385,13 @@ void Algebraic_structure::associativity(){
                 
                 if(!associative){
                     this->extra_properties[ASSOCIATIVITY] = false;
+                    
+                    //remove
+                    std::cout << "not associative" << std::endl;
+                    std:: cout << "x = " << x << ", y = " << y << ", z = " << z << ", x(yz) = " << left << ", (xy)z = " << right <<std::endl;
+                    
+                    
+                    
                     return;
                 }
             } //end z
@@ -393,6 +400,11 @@ void Algebraic_structure::associativity(){
     
     //else true
     this->extra_properties[ASSOCIATIVITY] = true;
+    
+    //remove
+    std::cout << "associative" << std::endl;
+
+    
 }
 
 //check that x * y results in one of the member elements
@@ -420,12 +432,17 @@ void Algebraic_structure::closure(){
             //if z not found in elements for this x*y
             if (found_element == false){
                 this->extra_properties[CLOSURE] = false;
+                
+                std::cout << "not closed" << std::endl;
+                
                 return;
             }
         }//end y
         
     }//end x
     this->extra_properties[CLOSURE] = true;
+    std::cout << "closed" << std::endl;
+    
 }
 
 
@@ -464,10 +481,9 @@ bool Algebraic_structure::is_right_identity_element(char iden){
 
 
 
-//existence of left inverse: ∃x ∀y ∃z (x is identity & z * y = x)
 void Algebraic_structure::left_identity_left_inverse(){
     char x,y,z;
-    char left_iden = '0'; //dummy initialization
+    char left_iden = 'i'; //dummy initialization
     bool found_left_identity = false;
     bool is_inverse = false;
     int y_counter = 0;
@@ -479,6 +495,7 @@ void Algebraic_structure::left_identity_left_inverse(){
         
         if (found_left_identity){
             left_iden = x;
+            break;
         }
     }
     
@@ -519,10 +536,9 @@ void Algebraic_structure::left_identity_left_inverse(){
 
 
 
-//existence of left inverse: ∃x ∀y ∃z (x is identity & y * z = x)
 void Algebraic_structure::left_identity_right_inverse(){
     char x,y,z;
-    char left_iden = '0'; //dummy initialization
+    char left_iden = 'i'; //dummy initialization
     bool found_left_identity = false;
     bool is_inverse = false;
     int y_counter = 0;
@@ -533,6 +549,7 @@ void Algebraic_structure::left_identity_right_inverse(){
         found_left_identity = is_left_identity_element(x);
         if (found_left_identity){
             left_iden = x;
+            break;
         }
     }
     
@@ -573,10 +590,9 @@ void Algebraic_structure::left_identity_right_inverse(){
 
 
 
-//existence of left inverse: ∃x ∀y ∃z (x is identity & z * y = x)
 void Algebraic_structure::right_identity_left_inverse(){
     char x,y,z;
-    char right_iden = '0'; //dummy initialization
+    char right_iden = 'i'; //dummy initialization
     bool found_right_identity = false;
     bool is_inverse = false;
     int y_counter = 0;
@@ -587,6 +603,7 @@ void Algebraic_structure::right_identity_left_inverse(){
         found_right_identity = is_right_identity_element(x);
         if (found_right_identity){
             right_iden = x;
+            break;
         }
     }
     
@@ -627,10 +644,10 @@ void Algebraic_structure::right_identity_left_inverse(){
 
 
 
-//existence of left inverse: ∃x ∀y ∃z (x is identity & y * z = x)
+
 void Algebraic_structure::right_identity_right_inverse(){
     char x,y,z;
-    char right_iden = '0'; //dummy initialization
+    char right_iden = 'i'; //dummy initialization
     bool found_right_identity = false;
     bool is_inverse = false;
     int y_counter = 0;
@@ -641,6 +658,7 @@ void Algebraic_structure::right_identity_right_inverse(){
         found_right_identity = is_left_identity_element(x);
         if (found_right_identity){
             right_iden = x;
+            break;
         }
     }
     
@@ -652,7 +670,6 @@ void Algebraic_structure::right_identity_right_inverse(){
     
     for (int j=0; j< this->order; j++){
         y = this->elements[j];
-        y_counter = 0;
         
         for (int k=0; k< this->order; k++){
             z = this->elements[k];

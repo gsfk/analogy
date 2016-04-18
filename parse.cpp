@@ -1,11 +1,10 @@
-#include "parse.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include "algebraic_structure.h"
 #include "condition.h"
-
+#include "parse.h"
 
 //helper file to target delimiters for deletion
 bool isDelimiter(char c){
@@ -30,7 +29,7 @@ Algebraic_structure *parse(char* filename) {
     
     //int arity;
     
-    std::cout << "called parser" << std::endl;
+    //std::cout << "called parser" << std::endl;
     
     //open file
     std::ifstream input_file(filename);
@@ -49,7 +48,10 @@ Algebraic_structure *parse(char* filename) {
         }
         
         if(input_string == "Elements:"){
-            std::cout << "\nprocessing Elements\n";
+            
+            //remove
+            //std::cout << "\nprocessing Elements\n";
+            
             //inner read loop to process elements
             //ignore comments in inner loop
             while (input_file >> input_string && input_string != "Relation:"){
@@ -66,28 +68,34 @@ Algebraic_structure *parse(char* filename) {
         } //end element handling
         
         if(input_string == "Relation:"){
-            std::cout << "\nprocessing Relation\n";
+            
+            
+            //std::cout << "\nprocessing Relation\n";
+            
+            
             //save relation name
             input_file >> input_string;
             relation_name  = input_string;
             
-            std::cout << "read relation " << relation_name << std::endl;
+            //std::cout << "read relation " << relation_name << std::endl;
+            
+            
         } //end relation handling
         
         
         if(input_string == "Facts:"){
             //inner loop to read facts
-            std::cout << "\nbuilding fact table\n";
+            //std::cout << "\nbuilding fact table\n";
             
             getline(input_file, input_string);
             
             while (input_string != "end"){
                 
-                std::cout << "input string: " << input_string << "size: " << input_string.length() << std::endl;
+                //std::cout << "input string: " << input_string << "size: " << input_string.length() << std::endl;
                 
                 //remove all delimiters
                 input_string.erase(std::remove_if(input_string.begin(), input_string.end(), &isDelimiter), input_string.end());
-                std::cout << "delims removed: " << input_string << " " << input_string.length() << std::endl;
+                //std::cout << "delims removed: " << input_string << " " << input_string.length() << std::endl;
                 
                 
                 //if there's anything left, add it to the table
@@ -110,7 +118,7 @@ Algebraic_structure *parse(char* filename) {
                 
                 //get next line
                 getline(input_file, input_string);
-                
+
             }
             
         } //end fact handling
@@ -118,21 +126,23 @@ Algebraic_structure *parse(char* filename) {
         
         
         if(input_string == "end"){
-            std::cout << "\nfound end\n" << std::endl;
+            
+            //std::cout << "\nfound end\n" << std::endl;
+            
             input_file.close();
             
             //done file operations, call constructor
             
             Algebraic_structure *alg = new Algebraic_structure(elements, relation_name, facts);
             return alg;
-            
+
             //finshing reading file
         }
-    } //end main while loop
-    
+    } //end main while loop 
+
     //we should only get here if file is malformed.
     //TODO: exception?
-    
+
     return nullptr;
     
 }
