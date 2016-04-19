@@ -6,7 +6,7 @@
 #include <unistd.h>     //system calls
 #include "prover.h"
 
-//change "...your..path...here..." to your absolute path to prover9. Make sure the path begins with a quotation mark (") and ends with (prover9)
+//change "...your..path..here..." to your absolute path to prover9. Make sure the path begins with a quotation mark (") and ends with (prover9)
 //eg: "/Users/Me/Documents/stuff/LADR-2009-11A/bin/prover9
 //make sure the space before "-f" remains
 //leave the rest of the string untouched
@@ -16,15 +16,11 @@
 
 int call_prover(){
     //change this line
-    int outcome = system("/...your..path...here..../prover9 -f analogy_prover_file.in > prover_temp.out");
+    int outcome = system("/...your..path..here.../prover9 -f analogy_prover_file.in > prover_temp.out");
     
     //pass along prover exit code
     return WEXITSTATUS(outcome);
 }
-
-
-
-
 
 //main prover loop:
 
@@ -33,8 +29,8 @@ int call_prover(){
     //print out f as goal
     //call prover
     //if proof found, f redundant, mark for removal
-//return S
 
+//return S
 
 /*
  Prover9 return values:
@@ -113,11 +109,7 @@ void invoke_prover(std::vector<Formula>* f){
         
         outcome = call_prover();
     
-        //outcome = system("/Users/G2/Documents/Logic/project/code/LADR-2009-11A/bin/prover9 -f analogy_prover_file.in > prover_temp.out");
-        //outcome  = WEXITSTATUS(outcome);
-        
-        
-        std::cout << "outcome: " << outcome << std::endl;
+        //std::cout << "outcome: " << outcome << std::endl;
         
         //exit code 0 means proof found
         //if proof found, this formula redundant, remove from set
@@ -127,13 +119,14 @@ void invoke_prover(std::vector<Formula>* f){
         if (outcome == 4){
             //std::cout << "timed out for formula " << (*f)[i].prover_name << std::endl;
         }
+        if (outcome == 127){
+            std::cerr << "No prover found";
+            throw 1;
+        }
         
     } //end main loop
     
 }
-
-
-
 
 
 //extra function, just for fun
@@ -144,10 +137,6 @@ void invoke_prover(std::vector<Formula>* f){
 
 
 //this is experimental code, no user functionality
-
-
-
-
 
 /*
  Generating powersets turns out to be not entirely straightforward in C++.
@@ -217,11 +206,6 @@ int num_formulas_this_subset (std::string s){
     }
     return count;
 }
-
-
-
-
-
 
 
 
@@ -316,21 +300,6 @@ std::map<std::string, int> find_sufficient_subsets(std::vector<Formula>* f){
         
     } //end main loop, done with subsets
     
-    
-    
-    //todo: minimum set find
-    //find smallest subset size
-    //save all the subsets with that size in a map
-    //return that map instead of all sufficient
-    
-    
-    
     return sufficient_subsets;
 }
-
-
-
-
-
-
 

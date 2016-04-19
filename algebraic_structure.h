@@ -55,7 +55,7 @@ public:
         relation = r;
         facts = f;
         num_facts = f.size();
-        std::cout << "called Alg constructor: " << elements.size() << " elements, relation '" << relation << "' and " << facts.size() << " facts. " << std::endl;
+        //std::cout << "called Alg constructor: " << elements.size() << " elements, relation '" << relation << "' and " << facts.size() << " facts. " << std::endl;
     };
     
     char table_lookup(char, char);

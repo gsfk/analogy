@@ -82,10 +82,6 @@ void Algebraic_structure::two_ways_of_analogy_search(Condition* c){
 
 
 
-
-
-
-
 void Algebraic_structure::forall_x_forall_y(Condition* c){
     char x,y;
     for (int i = 0; i < this->order; i++){
@@ -386,11 +382,8 @@ void Algebraic_structure::associativity(){
                 if(!associative){
                     this->extra_properties[ASSOCIATIVITY] = false;
                     
-                    //remove
-                    std::cout << "not associative" << std::endl;
-                    std:: cout << "x = " << x << ", y = " << y << ", z = " << z << ", x(yz) = " << left << ", (xy)z = " << right <<std::endl;
-                    
-                    
+                    //std::cout << "not associative" << std::endl;
+                    //std:: cout << "x = " << x << ", y = " << y << ", z = " << z << ", x(yz) = " << left << ", (xy)z = " << right <<std::endl;
                     
                     return;
                 }
@@ -402,7 +395,7 @@ void Algebraic_structure::associativity(){
     this->extra_properties[ASSOCIATIVITY] = true;
     
     //remove
-    std::cout << "associative" << std::endl;
+    //std::cout << "associative" << std::endl;
 
     
 }
@@ -433,7 +426,7 @@ void Algebraic_structure::closure(){
             if (found_element == false){
                 this->extra_properties[CLOSURE] = false;
                 
-                std::cout << "not closed" << std::endl;
+                //std::cout << "not closed" << std::endl;
                 
                 return;
             }
@@ -441,7 +434,7 @@ void Algebraic_structure::closure(){
         
     }//end x
     this->extra_properties[CLOSURE] = true;
-    std::cout << "closed" << std::endl;
+    //std::cout << "closed" << std::endl;
     
 }
 

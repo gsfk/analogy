@@ -108,20 +108,16 @@ std::pair<std::string, std::string> quantifier_names(Quantifiers);
 
 
 
-/*Predicates will be roughly of this form:
+/*Predicates look like this:
  
- auto p1 = [](Algebraic_structure a, char x, char y){ return x == y && x == a.table_lookup(x,y); }; // x * x = x
- auto p2 = [](Algebraic_structure a, char x, char y){ return a.table_lookup(x,y) == x; };     // x * y = x
- auto p3 = [](AlAlgebraic_structureg a, char x, char y){ return a.table_lookup(y,x) == x; };     // y * x = x
+ auto p1 = [](Algebraic_structure a, char x, char y){ return x == y && x == a.table_lookup(x,y); };     // x * x = x
+ auto p2 = [](Algebraic_structure a, char x, char y){ return a.table_lookup(x,y) == x; };               // x * y = x
+ auto p3 = [](AlAlgebraic_structureg a, char x, char y){ return a.table_lookup(y,x) == x; };            // y * x = x
  
  ... this uses C++ lambda abstractions, which is not strictly necessary, but they're nice and concise
  
  While the predicate explicitly mentions the domain ("Algebraic_structure a" in the input) the predicate is not
  fixed to any particular domain, since this is given as input.
- 
- 
- check_condition() is just a wrapper function around the predicate.
- it takes the domain g, and two values x and y as input, and passes back the true/false results
  
  */
 

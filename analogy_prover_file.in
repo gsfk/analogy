@@ -4,9 +4,37 @@ assign(max_seconds, 1).
 set(quiet).
 formulas(sos).
 
-all x exists y ((y * y = x) & all z (((z * y = x) -> z = y) & ((y * z  = x) -> z = y))).
+exists x all y (x * x = x).
+exists x exists y (x * x = x).
+exists x all y ((x * x = x) & all z (((z * x = x) -> z = x) & ((x * z  = x) -> z = x) & ((x * x = z) -> z = x))).
+exists x exists y ((x * x = x) & all z (((z * x = x) -> z = x) & ((x * z  = x) -> z = x) & ((x * x= z) -> z = x))).
+all x exists y (x * x = y).
+all x exists y ((x * x = y) & all z (((x * x= z) -> z = y))).
+exists x exists y (x * x = y).
+exists x exists y ((x * x = y) & all z (((x * x = z) -> z = y))).
+all x exists y (x * y = x).
+all x exists y ((x * y = x) & all z (((x * z  = x) -> z = y))).
+exists x exists y (x * y = x).
+exists x exists y ((x * y = x) & all z (((x * z  = x) -> z = y))).
+exists x all y (x * y = y).
+exists x exists y (x * y = y).
+exists x all y ((x * y = y) & all z (((z * y = y) -> z = x))).
+exists x exists y ((x * y = y) & all z (((z * y = y) -> z = x))).
+all x exists y (y * x = x).
+all x exists y ((y * x = x) & all z (((z * x = x) -> z = y))).
+exists x exists y (y * x = x).
+exists x exists y ((y * x = x) & all z (((z * x = x) -> z = y))).
+exists x all y (y * x = y).
+exists x exists y (y * x = y).
+exists x all y ((y * x = y) & all z (((y * z  = y) -> z = x))).
+exists x exists y ((y * x = y) & all z (((y * z  = y) -> z = x))).
+exists x exists y (y * y = x).
+exists x exists y ((y * y = x) & all z (((z * y = x) -> z = y) & ((y * z  = x) -> z = y))).
 all x all y all z ((x * y) * z = x * (y * z)).
-all x all y ((x * y) = (y * x)).
+all x all y exists z (x * y = z).
+exists x all y exists z ((x * y = y) & (z * y = x)).
+exists x all y exists z ((y * x = y) & (z * y = x)).
+exists x all y exists z ((x * y = y) & (y * z = x)).
 
 end_of_list.
 

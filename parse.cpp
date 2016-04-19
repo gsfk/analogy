@@ -27,16 +27,11 @@ Algebraic_structure *parse(char* filename) {
     std::vector<char> this_fact;
     std::vector < std::vector<char> > facts;
     
-    //int arity;
-    
-    //std::cout << "called parser" << std::endl;
-    
     //open file
     std::ifstream input_file(filename);
     if (!input_file){
         std::cerr << "Error opening file" << std::endl;
     }
-    
     
     //main loop: iterate through file
     while (input_file >> input_string){
@@ -63,7 +58,7 @@ Algebraic_structure *parse(char* filename) {
                 //number elements starting at zero
                 //add to vector
                 elements.push_back(input_string[0]);
-                std::cout << "added element " << input_string[0] << "\n";
+                //std::cout << "added element " << input_string[0] << "\n";
             }
         } //end element handling
         
@@ -107,7 +102,7 @@ Algebraic_structure *parse(char* filename) {
                     
                     //construct table entry for this particular fact
                     for (int i = 0; i < input_string.length(); i++){
-                        std::cout << i <<": " << input_string[i] << std::endl;
+                        //std::cout << i <<": " << input_string[i] << std::endl;
                         this_fact.push_back(input_string[i]);
                     }
                     
@@ -122,7 +117,6 @@ Algebraic_structure *parse(char* filename) {
             }
             
         } //end fact handling
-        
         
         
         if(input_string == "end"){
@@ -141,7 +135,6 @@ Algebraic_structure *parse(char* filename) {
     } //end main while loop 
 
     //we should only get here if file is malformed.
-    //TODO: exception?
 
     return nullptr;
     

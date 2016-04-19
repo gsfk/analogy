@@ -3,22 +3,23 @@
 #include <string>
 #include <map>
 
+//representation of the input, as well as most of the code to check claims
 #include "algebraic_structure.h"
+
+//functions related to predicates and final generation of formulas
 #include "condition.h"
+
+//input parsing
 #include "parse.h"
+
+//interaction with the theorem prover
 #include "prover.h"
-
-
-
 
 
 
 void no_prover_warning(){
     std::cout << "\nProver not used, expect redundant formulas.\nYou should really user the prover! It's way more impressive that way.";
 }
-
-
-
 
 
 int main(int argc, char** argv){
@@ -86,21 +87,26 @@ int main(int argc, char** argv){
     //ADD G SOMEWHERE
     formulas = &generate_formulas(predicates, *g);
     
-    
-    //print formulas
     int formula_count = 1;
+    //print formulas
+    if (!second_file){
+
     std::cout << "\nFound formulas for " << filename1 << ":\n" <<std::boolalpha;
     for (auto f : *formulas){
         std::cout << formula_count << ": " << f.pretty_name << " " << std::endl;
         formula_count++;
     }
-    
+    }
     
     
     //call prover
     if (use_prover){
+        try{
         invoke_prover(formulas);
-        
+        }
+        catch(int){
+            std::cerr << "Thorem prover not found" << std::endl;
+        }
         //experimental code: generate all 2^n subsets in order to search for true minimum sets of formulas.
         //No user output, this is used for comparison to the "subsumption" algorithm used in practice for
         //redundancy elimination. See prover.cpp comments for full details.
@@ -114,8 +120,6 @@ int main(int argc, char** argv){
     }
     
     
-    
-
     if (!second_file){
         if (use_prover){
             

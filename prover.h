@@ -5,9 +5,6 @@
 
 
 
-
-
-
 //all true claims are made into "Formula" objects, representing:
 //      prettified name (eg: "∀x ∃y x * y = x")
 //      a less pretty prover-readable name ("all x exists y *(x,y,x)")
@@ -48,6 +45,9 @@ void invoke_prover(std::vector<Formula>*);
 //since the implemenation is far faster than expected, generate all possible subsets
 //of formulas, to find the true minimal one, if one exists
 //this should give us an idea of how good subsumption is in practice
+
+//more complex theorem prover calls in newer versions of the implementation mean this is now deprecated
+//no user-servicable code inside
 std::map<std::string, int> find_sufficient_subsets(std::vector<Formula>*);
 
 

@@ -6,29 +6,13 @@
 
 
 /*
- 
- check_condition() is just a wrapper function around the predicate.
+  check_condition() is just a wrapper function around the predicate.
  it takes the domain g, and two values x and y as input, and passes back the true/false results
  
  */
 bool Condition::check_condition(Algebraic_structure& g, char x, char y){
     return this->f(g,x,y);
 }
-
-//construct arbitrary arity predicates name with variables: P(x), s(x,y), *(x,y,y), etc.
-//std::string Condition::prover_name(){
-//    std::string s;
-//    s += relation;
-//    s += '(';
-//    int i;
-//    for (i = 0; i < ordered_variables.size()-1; i++){
-//        s+= ordered_variables[i];
-//        s+= ",";
-//    }
-//    s += ordered_variables[i];   //last variable, no trailing comma
-//    s += ')';
-//    return s;
-//}
 
 
 //function-style prover name, assumes arity 3
@@ -45,7 +29,6 @@ std::string Condition::prover_name(){
     s += ')';
     return s;
 }
-
 
 
 //number of x variables in condition
@@ -81,7 +64,7 @@ bool not_unique(Quantifiers q){
         case EXISTS_X_EXISTS_Y:
             result = true;
             break;
-        case FOR_ALL_X_EXISTS_UNIQUE_Y:  //has substitution code
+        case FOR_ALL_X_EXISTS_UNIQUE_Y:  
         case EXISTS_X_EXISTS_UNIQUE_Y:
         case EXISTS_UNIQUE_X_FOR_ALL_Y:
         case EXISTS_UNIQUE_X_EXISTS_Y:
