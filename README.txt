@@ -16,7 +16,7 @@ Analogy takes groups and other finite algebraic structures as input, and outputs
 
 	The predicate P represents claims of the form “v1 * v2 = v3”, where “*” is the operator for the group, or some binary operator for non-groups. 
 
-Also investigated associativity, commutativity and the existence of identity and inverse elements. 
+Also investigated are associativity, commutativity and the existence of identity and inverse elements. 
 
 
 Example input is included in the submission. Either one or two files can be given as input. In the case of two input files, formulas and axioms for both structures will be compared. See instructions and code comments for more details. 
