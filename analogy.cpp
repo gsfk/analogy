@@ -82,31 +82,28 @@ int main(int argc, char** argv){
     
     
     //get all true formulas to send to the prover
-    //todo: still need substitution code for uniqueness quantifier
-    
-    //ADD G SOMEWHERE
     formulas = &generate_formulas(predicates, *g);
     
-    int formula_count = 1;
-    //print formulas
-    if (!second_file){
 
-    std::cout << "\nFound formulas for " << filename1 << ":\n" <<std::boolalpha;
-    for (auto f : *formulas){
-        std::cout << formula_count << ": " << f.pretty_name << " " << std::endl;
-        formula_count++;
-    }
+    //print formulas
+    int formula_count = 1;
+    if (!second_file){
+        std::cout << "\nFound formulas for " << filename1 << ":\n" <<std::boolalpha;
+        for (auto f : *formulas){
+            std::cout << formula_count << ": " << f.pretty_name << " " << std::endl;
+            formula_count++;
+        }
     }
     
     
     //call prover
     if (use_prover){
         try{
-        invoke_prover(formulas);
+            invoke_prover(formulas);
         }
         catch(int){
             std::cerr << "Thorem prover not found" << std::endl;
-            return 1; 
+            return 1;
         }
         //experimental code: generate all 2^n subsets in order to search for true minimum sets of formulas.
         //No user output, this is used for comparison to the "subsumption" algorithm used in practice for
@@ -115,8 +112,8 @@ int main(int argc, char** argv){
         //all_sufficient_subsets = find_sufficient_subsets(formulas);
     }
     
-
-    if (!use_prover){
+    
+    if (!second_file && !use_prover){
         no_prover_warning();
     }
     
@@ -158,8 +155,8 @@ int main(int argc, char** argv){
         formulas2 = &generate_formulas(predicates2, *g2);
         if (use_prover){
             try{
-            
-            invoke_prover(formulas2);
+                
+                invoke_prover(formulas2);
             }
             catch(int){
                 std::cerr << "Thorem prover not found" << std::endl;
