@@ -106,6 +106,7 @@ int main(int argc, char** argv){
         }
         catch(int){
             std::cerr << "Thorem prover not found" << std::endl;
+            return 1; 
         }
         //experimental code: generate all 2^n subsets in order to search for true minimum sets of formulas.
         //No user output, this is used for comparison to the "subsumption" algorithm used in practice for
@@ -156,7 +157,14 @@ int main(int argc, char** argv){
         //save all formulas found true, send to prover for redundancy elimination
         formulas2 = &generate_formulas(predicates2, *g2);
         if (use_prover){
+            try{
+            
             invoke_prover(formulas2);
+            }
+            catch(int){
+                std::cerr << "Thorem prover not found" << std::endl;
+                return 1;
+            }
         }
         
         
