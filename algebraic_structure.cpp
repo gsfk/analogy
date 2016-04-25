@@ -648,7 +648,7 @@ void Algebraic_structure::right_identity_right_inverse(){
     //is x an identity element?
     for (int i = 0; i<this->order; i++ ){
         x = this->elements[i];
-        found_right_identity = is_left_identity_element(x);
+        found_right_identity = is_right_identity_element(x);
         if (found_right_identity){
             right_iden = x;
             break;
