@@ -610,7 +610,7 @@ std::vector<Formula>& generate_formulas(std::vector<Condition*> predicates, Alge
                     
                 case RIGHT_IDENTITY_LEFT_INVERSE:
                     
-                    pretty << "∃x ∀y ∃z ((y " << g.relation << " x = y) & (z " << g.relation << " y = x)) (right identity, right inverse)";
+                    pretty << "∃x ∀y ∃z ((y " << g.relation << " x = y) & (z " << g.relation << " y = x)) (right identity, left inverse)";
                     current_formula.pretty_name = pretty.str();
                     
                     //build prover
